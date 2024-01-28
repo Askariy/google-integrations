@@ -5,6 +5,7 @@ dotenv.config({});
 import express from "express";
 import { google } from 'googleapis';
 import dayjs from 'dayjs';
+import { v4 as uuid } from 'uuid';
 
 const calendar = google.calendar({
     version : "v3",
@@ -52,6 +53,7 @@ app.get('/schedule_event', async (req, res) => {
    await calendar.events.insert({
     calendarId:"primary",
     auth:oauth2Client,
+    conferenceDataVersion:1,
     requestBody:{
         summary:"This is a test event",
         description:"Some event that is very important",
@@ -63,6 +65,14 @@ app.get('/schedule_event', async (req, res) => {
             dateTime: dayjs(new Date()).add(1, 'day').add(1, 'hour').toISOString(),
             timeZone: "Asia/Karachi"
         },
+        conferenceData:{
+            createRequest:{
+                requestId: uuid(), //requestId could be any random string
+            },
+        },
+        attendees:[{
+            email:"zaidyaskari@gmail.com"
+        }],
     }
    });
 
